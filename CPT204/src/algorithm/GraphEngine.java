@@ -38,27 +38,37 @@ public class GraphEngine {
             path.add(start);
             return new PathResult(path, 0.0);
         }
-
+        // 每个点对应(dist,前驱)使用两个映射和顶点绑定
+        // 不用数组是因为顶点ID不是整数而是“L0001”这样的字符串
+        // 无法用顶点ID作为索引来对应距离和前缀点
         // 距离映射：顶点 → 从起点到该顶点的最短距离
+        // cost[]
         Map<String, Double> distance = new HashMap<>();
-        // 前驱映射：顶点 → 最短路径中的上一个顶点
+        // 前驱映射：顶点 → 从起点到该顶点最短路径中的上一个顶点
+        // parent[]
         Map<String, String> previous = new HashMap<>();
-        // 优先队列：按距离排序，存储 (distance, vertex)
+        // 优先队列(最小堆)：按dist大小排序键值对，存储 (distance, vertex)
         PriorityQueue<Map.Entry<Double, String>> pq = new PriorityQueue<>(
                 Comparator.comparingDouble(Map.Entry::getKey)
         );
         // 已访问的顶点集合
         Set<String> visited = new HashSet<>();
 
-        // 初始化
+        // 初始化：距离初始化为正无穷，前驱点为null
         for (String vertex : graph.getAllVertices()) {
             distance.put(vertex, Double.POSITIVE_INFINITY);
             previous.put(vertex, null);
         }
+        //初始化起点为(o,null)
         distance.put(start, 0.0);
+        //创建一个"键值对"（距离=0.0，顶点=start），放入优先队列中。
         pq.offer(new AbstractMap.SimpleEntry<>(0.0, start));
+        //AbstractMap.SimpleEntry 是 Java 提供的一个简单的键值对实现类。
+        //我们只需要一个简单的键值对，不需要 HashMap 的全部功能，故不使用hashmap
 
         while (!pq.isEmpty()) {
+            //取出当前最小距离节点，第一次是弹出起点
+            //<Double, String>分别代表距离和位置ID，如"L0003"和start到该位置的距离
             Map.Entry<Double, String> entry = pq.poll();
             String current = entry.getValue();
             double currentDist = entry.getKey();
@@ -66,10 +76,11 @@ public class GraphEngine {
             // 如果当前顶点已访问，跳过（懒惰删除）
             if (visited.contains(current)) {
                 continue;
+                //跳过当前这次循环的剩余代码，直接进入下一次循环
             }
             visited.add(current);
 
-            // 如果到达终点，提前结束
+            // 如果到达终点，提前结束，不用计算所有点到起始点的最短距离
             if (current.equals(end)) {
                 break;
             }
@@ -81,12 +92,17 @@ public class GraphEngine {
 
                 if (visited.contains(neighbor)) {
                     continue;
+                    //跳过当前这次循环的剩余代码，直接进入下一次循环
                 }
 
+                // 更新邻居的(dist,前驱),并将新邻居数据加入PQ.
+                // 该currentDist是当前最小距离节点的距离
                 double newDist = currentDist + weight;
                 if (newDist < distance.get(neighbor)) {
                     distance.put(neighbor, newDist);
                     previous.put(neighbor, current);
+                    //加入该邻居的新键值对数据到PQ(旧的不删直接被压倒底部)
+                    //每个点第一次循环到都会加入PQ(新距离一定小于正无穷)
                     pq.offer(new AbstractMap.SimpleEntry<>(newDist, neighbor));
                 }
             }
@@ -117,7 +133,8 @@ public class GraphEngine {
         List<String> path = new ArrayList<>();
         String current = end;
 
-        // 如果无法到达终点，返回空路径
+        // 如果终点没有前驱节，且排除起点不是终点(主函数定义了这种情况返回start，0的path)
+        // 说明无法从起点到达终点，返回空路径
         if (previous.get(end) == null && !start.equals(end)) {
             return path;
         }
@@ -125,6 +142,8 @@ public class GraphEngine {
         // 从终点回溯到起点
         while (current != null) {
             path.add(current);
+            // 更新current值为其前缀位置ID
+            // 下一次循环将前缀放入path后继续访问前缀的前缀
             current = previous.get(current);
         }
 
