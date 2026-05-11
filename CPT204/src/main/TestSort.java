@@ -5,13 +5,13 @@ import io.CSVLoader;
 import algorithm.*;
 import java.util.*;
 
-public class Main {
+public class TestSort {
     public static void main(String[] args) {
         // 1. 定义数据集路径
         String[] filePaths = {
-                "data/candidates_A.csv",
-                "data/candidates_B.csv",
-                "data/candidates_C.csv"
+                "CPT204/data/candidates_A.csv",
+                "CPT204/data/candidates_B.csv",
+                "CPT204/data/candidates_C.csv"
         };
 
         LocationComparator comparator = new LocationComparator();
