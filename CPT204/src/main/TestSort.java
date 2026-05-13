@@ -10,7 +10,7 @@ public class TestSort {
 
     // 【新增】提供给 Task B 使用的数据结构
     // Key: 数据集名称 (如 "A"), Value: 该数据集排名前 10 的地点对象列表
-    private static final Map<String, List<Location>> inspectionResults = new LinkedHashMap<>();
+    private static final Map<String, List<String>> inspectionResults = new LinkedHashMap<>();
 
     public static void main(String[] args) {
         // 1. 定义数据集路径
@@ -51,10 +51,11 @@ public class TestSort {
             // 我们只需要取任意一个算法的排序结果（因为规则一致，结果相同）
             if (!reports.isEmpty()) {
                 List<Location> fullSortedList = reports.get(0).getSortedData();
-                List<Location> top10 = new ArrayList<>(
-                        fullSortedList.subList(0, Math.min(10, fullSortedList.size()))
-                );
-                inspectionResults.put(datasetName, top10);
+                List<String> top10Ids = new ArrayList<>();
+                for (int i = 0; i < 10 && i < fullSortedList.size(); i++) {
+                    top10Ids.add(fullSortedList.get(i).getLocationId());
+                }
+                inspectionResults.put(datasetName, top10Ids);
             }
 
             // 5. 打印输出（用于实验报告截图）
@@ -81,7 +82,7 @@ public class TestSort {
      * 【新增】提供给同伴的静态访问方法
      * @return 包含三个数据集 Top 10 地点的 Map
      */
-    public static Map<String, List<Location>> getInspectionResults() {
+    public static Map<String, List<String>> getInspectionResults() {
         return inspectionResults;
     }
 
