@@ -21,12 +21,23 @@ public class WeightedGraph {
      * 添加一条边（无向图，会添加两条方向）
      */
     public void addEdge(String from, String to, double weight) {
-        // 添加 from → to
-        adjacencyList.computeIfAbsent(from, k -> new ArrayList<>())
-                .add(new WeightedEdge(from, to, weight));
-        // 添加 to → from（无向图）
-        adjacencyList.computeIfAbsent(to, k -> new ArrayList<>())
-                .add(new WeightedEdge(to, from, weight));
+        // 1. 添加从 from 到 to 的单向边
+        // 如果邻接表中还没有“起点from”的记录，为它初始化一个新的 ArrayList
+        if (!adjacencyList.containsKey(from)) {
+            adjacencyList.put(from, new ArrayList<>());
+        }
+        // 此时保证对应的 List 一定存在，直接获取并添加新边
+        adjacencyList.get(from).add(new WeightedEdge(from, to, weight));
+
+        // 2. 添加从 to 到 from 的反向边（因为是无向图，双向都要连通）
+        // 如果邻接表中还没有“顶点to”的记录，为它初始化一个新的 ArrayList
+        if (!adjacencyList.containsKey(to)) {
+            adjacencyList.put(to, new ArrayList<>());
+        }
+        // 此时保证对应的 List 一定存在，直接获取并添加新边
+        adjacencyList.get(to).add(new WeightedEdge(to, from, weight));
+
+        // 3. 全局边计数自增
         edgeCount++;
     }
 

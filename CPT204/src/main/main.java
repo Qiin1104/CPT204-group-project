@@ -6,7 +6,9 @@ import model.WeightedGraph;
 import model.PathResult;
 import io.CSVLoader;
 import algorithm.*;
+import visualization.PathVisualizer;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -156,5 +158,27 @@ public class main {
         } else {
             System.out.println("No valid path found for Case 4");
         }
+
+        // 1. 创建可视化所需的 Case 列表
+        List<visualization.PathVisualizer.PathCase> pathCases = new ArrayList<>();
+
+        pathCases.add(new visualization.PathVisualizer.PathCase("Case 1: A1 → A1",
+                a1, a1, new ArrayList<>(), result1));
+
+        pathCases.add(new visualization.PathVisualizer.PathCase("Case 2: A1 → A10",
+                a1, a10, new ArrayList<>(), result2));
+
+        pathCases.add(new visualization.PathVisualizer.PathCase("Case 3: A1 → B1 (via B5)",
+                a1, b1, Arrays.asList(b5), result3));
+
+        pathCases.add(new visualization.PathVisualizer.PathCase("Case 4: A1 → C1 (via B5, C5)",
+                a1, c1, Arrays.asList(b5, c5), result4));
+
+        // 2. 启动可视化
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            visualization.PathVisualizer commandCenter = new visualization.PathVisualizer(pathCases);
+            commandCenter.setVisible(true);
+            System.out.println("\nPath visualization has been successfully initiated");
+        });
     }
 }
