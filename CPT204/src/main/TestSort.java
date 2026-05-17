@@ -28,7 +28,7 @@ public class TestSort {
         );
 
         // 3. 创建评测器：重复 3 次以减少误差
-        SortTester benchmark = new SortTester(sorters, 3);
+        SortPerfomance benchmark = new SortPerfomance(sorters, 3);
 
         // 打印表头
         System.out.println("------------------------------------------------------------------------------------------------------------------");

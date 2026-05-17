@@ -29,7 +29,7 @@ public class CSVLoader {
                 if (values.length >= 2) {
                     String id = values[0].trim();
                     double score = Double.parseDouble(values[1].trim());
-                    locations.add(new Location(id, score));
+                    locations.add(new Location(id,score));
                 }
             }
         } catch (IOException | NumberFormatException e) {

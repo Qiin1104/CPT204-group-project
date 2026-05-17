@@ -10,11 +10,11 @@ import java.util.List;
  * 该类负责自动化执行排序实验。
  * 职责包括：数据备份、性能计时、结果验证。
  */
-public final class SortTester {
+public final class SortPerfomance {
     private final List<Sorter> sorters; // 存储待测试的算法列表（多态的应用）
     private final int repetitions;      // 每个算法重复运行的次数（用于取平均值）
 
-    public SortTester(List<Sorter> sorters, int repetitions) {
+    public SortPerfomance(List<Sorter> sorters, int repetitions) {
         if (sorters == null || sorters.isEmpty()) {
             throw new IllegalArgumentException("必须提供至少一个排序算法。");
         }

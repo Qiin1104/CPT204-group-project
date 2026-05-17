@@ -8,7 +8,6 @@ import io.CSVLoader;
 import algorithm.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 项目统一入口 - 同时执行 Task A 和 Task B
@@ -56,7 +55,7 @@ public class main {
                 new MergeSorter()
         );
 
-        SortTester benchmark = new SortTester(sorters, 3);
+        SortPerfomance benchmark = new SortPerfomance(sorters, 3);
         Map<String, List<String>> inspectionResults = new LinkedHashMap<>();
 
         System.out.println("------------------------------------------------------------------------------------------------------------------");
