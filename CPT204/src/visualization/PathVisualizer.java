@@ -10,10 +10,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import model.PathResult;
 
-/**
- * 城市巡检动态交互指挥中心 (CPT204 Group Project Premium Edition)
- * 纯 JDK 标准库实现，无第三方依赖，完全契合课程大纲规范。
- */
+
 public class PathVisualizer extends JFrame {
 
     // 配色方案
@@ -29,7 +26,7 @@ public class PathVisualizer extends JFrame {
     private static final Color NEON_END = new Color(255, 46, 99);         // 巡检异常色（珊瑚红）
     private static final Color NEON_NORMAL = new Color(56, 139, 253);     // 普通途径光带（全息蓝）
 
-    // 💡 痛点 3 修复：全新调和的点位配色体系
+    // 节点颜色
     private static final Color NODE_START_COLOR = new Color(255, 255, 255);      // 起点：全息纯白（破空高亮）
     private static final Color NODE_WAYPOINT_COLOR = new Color(241, 196, 15);    // 中间必经点：全息琥珀黄（低调内敛）
     private static final Color NODE_END_COLOR = new Color(255, 75, 75);         // 终点：脉冲绯红（收敛核心）
@@ -86,12 +83,6 @@ public class PathVisualizer extends JFrame {
         lblTitle.setForeground(COLOR_TEXT_MAIN);
         lblTitle.setBorder(BorderFactory.createEmptyBorder(20, 20, 3, 20));
         sidebar.add(lblTitle);
-
-//        JLabel lblSub = new JLabel("Path Routing");
-//        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-//        lblSub.setForeground(COLOR_TEXT_MUTED);
-//        lblSub.setBorder(BorderFactory.createEmptyBorder(0, 20, 15, 20));
-//        sidebar.add(lblSub);
 
         // 交互操作引导
         JPanel guidePanel = new JPanel(new BorderLayout());
@@ -206,9 +197,8 @@ public class PathVisualizer extends JFrame {
 
         sidebar.add(detailPanel);
 
-        // -------------------------------------------------------------------------
+
         // 图例说明面板
-        // -------------------------------------------------------------------------
         JPanel legendPanel = new JPanel(new GridLayout(4, 1, 0, 6));
         legendPanel.setOpaque(false);
         legendPanel.setBackground(COLOR_SIDEBAR);
@@ -219,7 +209,7 @@ public class PathVisualizer extends JFrame {
                 new Font("Segoe UI", Font.BOLD, 11), COLOR_TEXT_MUTED
         ));
 
-        // 动态装配带有发光原点指引的图例项
+        // 图例项
         legendPanel.add(createLegendItem("Start Node", NODE_START_COLOR, "The starting node of the path"));
         legendPanel.add(createLegendItem("Mandatory Waypoint", NODE_WAYPOINT_COLOR, "Mandatory nodes to pass through"));
         legendPanel.add(createLegendItem("Destination", NODE_END_COLOR, "The target point of the current path"));
@@ -233,7 +223,7 @@ public class PathVisualizer extends JFrame {
         sidebar.add(legendWrapper);
         add(sidebar, BorderLayout.WEST);
 
-        // 2. 右侧数字拓扑网格空间 (Topology Visualizer Canvas)
+        // 2. 拓扑网格空间
         mapPanel = new MapPanel();
         add(mapPanel, BorderLayout.CENTER);
 
@@ -299,7 +289,7 @@ public class PathVisualizer extends JFrame {
         mapPanel.repaint();
     }
 
-    //核心画布组件：绘制路径
+    // 绘制路径
     private class MapPanel extends JPanel {
         public MapPanel() {
             setBackground(COLOR_BG);
@@ -315,7 +305,7 @@ public class PathVisualizer extends JFrame {
             int w = getWidth();
             int h = getHeight();
 
-            // 1. 绘制科技感背景雷达网格线
+            // 1. 绘制网格线
             g2.setColor(COLOR_GRID);
             g2.setStroke(new BasicStroke(1.0f));
             int gridSize = 50;
@@ -341,14 +331,14 @@ public class PathVisualizer extends JFrame {
                 nodePositions.put(node, calculateCoordinates(node, i, pathNodes.size(), w, h));
             }
 
-            // 3. 主路径发光光带绘制循环 (Path Lighting Strip Drawing Loop)
+            // 3. 主路径发光光带绘制循环
             if (pathNodes.size() > 1) {
                 g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 for (int i = 0; i < pathNodes.size() - 1; i++) {
                     Point2D p1 = nodePositions.get(pathNodes.get(i));
                     Point2D p2 = nodePositions.get(pathNodes.get(i + 1));
 
-                    // 双层发光光带 (Dual-layer Neon Lighting)
+                    // 双层发光光带
                     g2.setColor(new Color(56, 139, 253, 40)); // 外层扩散弱光
                     g2.setStroke(new BasicStroke(9.0f));
                     g2.draw(new Line2D.Double(p1, p2));
@@ -361,19 +351,19 @@ public class PathVisualizer extends JFrame {
                 }
             }
 
-            // 4. 路径箭头优化绘制循环 (Optimized Arrow Drawing Loop)
+            // 4. 路径箭头绘制循环
             if (pathNodes.size() > 1) {
                 for (int i = 0; i < pathNodes.size() - 1; i++) {
                     Point2D p1 = nodePositions.get(pathNodes.get(i));
                     Point2D p2 = nodePositions.get(pathNodes.get(i + 1));
 
-                    // 默认单向路径，箭头尖端放置在靠后 72% 位置，方向感极强
+                    // 默认单向路径，箭头尖端放置在50%位置
                     double tipPosFraction = 0.5;
 
-                    // 💡 修复点：检查这条物理路径是否在整个轨迹中是双向通行的
+                    // 检查这条物理路径是否在整个轨迹中是双向通行的
                     if (bidiSegments.contains(new UnorderedPair<>(pathNodes.get(i), pathNodes.get(i + 1)))) {
                         if (pathNodes.get(i).compareTo(pathNodes.get(i + 1)) < 0) {
-                            // 前进路线（如 L0106 -> L0105）：将箭头控制在 25% 的靠前位置
+                            // 前进路线（如 L0106 -> L0105）：将箭头控制在 75% 的靠前位置
                             tipPosFraction = 0.75;
                         } else {
                             // 折返路线（如 L0105 -> L0106）：将箭头控制在 75% 的靠后位置，完美实现分流不重叠
@@ -430,7 +420,7 @@ public class PathVisualizer extends JFrame {
                 g2.drawString(node, tx, ty);
             }
 
-            // 绘制场景水印文字和🍉 watermelon 水印
+            // 绘制场景水印文字
             g2.setFont(new Font("Segoe UI", Font.BOLD, 36));
             g2.setColor(new Color(255, 255, 255, 12));
             g2.drawString(rc.caseName.toUpperCase(), 30, h - 40);
@@ -478,7 +468,7 @@ public class PathVisualizer extends JFrame {
         }
     }
 
-    // 🔬 分析轨迹链，识别哪些物理段被双向通行 (Past once, back once)
+    // 析轨迹链，识别哪些物理段被双向通行
     private Set<UnorderedPair<String>> findBidirectionalSegments(List<String> pathNodes) {
         Set<UnorderedPair<String>> bidirectionalSegments = new HashSet<>();
         Set<Pair<String>> traversedForward = new HashSet<>();
@@ -494,7 +484,7 @@ public class PathVisualizer extends JFrame {
         return bidirectionalSegments;
     }
 
-    // 📦 有序点对，表示特定的单向遍历步骤 (A -> B != B -> A)
+    // 有序点对，表示特定的单向遍历步骤 (A -> B != B -> A)
     class Pair<T> {
         public T p1; public T p2;
         public Pair(T p1, T p2) { this.p1 = p1; this.p2 = p2; }
@@ -507,7 +497,7 @@ public class PathVisualizer extends JFrame {
         @Override public int hashCode() { return p1.hashCode() ^ p2.hashCode(); }
     }
 
-    // 📦 无序点对，表示一段中性的物理物理路径 (A-B == B-A)
+    // 无序点对，表示一段中性的物理物理路径 (A-B == B-A)
     class UnorderedPair<T> {
         public T p1; public T p2;
         public UnorderedPair(T p1, T p2) { this.p1 = p1; this.p2 = p2; }
