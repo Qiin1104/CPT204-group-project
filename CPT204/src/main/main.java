@@ -38,8 +38,6 @@ public class main {
         List<String> datasetC = inspectionResults.get("C");
 
         runTaskB(datasetA, datasetB, datasetC);
-
-        System.out.println("\n\n==================== ALL TASKS COMPLETED ====================");
     }
 
 

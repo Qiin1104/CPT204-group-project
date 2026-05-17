@@ -8,7 +8,7 @@ import java.util.*;
 
 public class TestSort {
 
-    // 【新增】提供给 Task B 使用的数据结构
+    // 提供给 Task B 使用的数据结构
     // Key: 数据集名称 (如 "A"), Value: 该数据集排名前 10 的地点对象列表
     private static final Map<String, List<String>> inspectionResults = new LinkedHashMap<>();
 
