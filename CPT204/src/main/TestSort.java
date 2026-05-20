@@ -8,8 +8,6 @@ import java.util.*;
 
 public class TestSort {
 
-    // 提供给 Task B 使用的数据结构
-    // Key: 数据集名称 (如 "A"), Value: 该数据集排名前 10 的地点对象列表
     private static final Map<String, List<String>> inspectionResults = new LinkedHashMap<>();
 
     public static void main(String[] args) {
@@ -27,8 +25,10 @@ public class TestSort {
                 new MergeSorter()
         );
 
-        // 3. 创建评测器：重复 3 次以减少误差
-        SortPerfomance benchmark = new SortPerfomance(sorters, 3);
+        // 3. 创建评测器：【关键修改】
+        // 参数 1000 代表正式运行 1000 次取平均值
+        // 参数 20 代表在计时前先静默预热运行 20 次，消除 JVM 冷启动噪音
+        SortPerfomance benchmark = new SortPerfomance(sorters, 1000, 20);
 
         // 打印表头
         System.out.println("------------------------------------------------------------------------------------------------------------------");
@@ -37,18 +37,15 @@ public class TestSort {
         System.out.println("------------------------------------------------------------------------------------------------------------------");
 
         for (String path : filePaths) {
-            // 解析数据集名称 (例如从 candidates_A.csv 中提取 "A")
             String datasetName = path.substring(path.lastIndexOf("_") + 1, path.lastIndexOf("."));
 
             // 加载数据
             List<Location> originalData = CSVLoader.loadLocations(path);
             if (originalData == null || originalData.isEmpty()) continue;
 
-            // 4. 使用 benchmark 类运行所有算法并获取结果报告
+            // 4. 使用修改后的 benchmark 类运行
             List<SortResult> reports = benchmark.run(originalData);
 
-            // 【关键修改】存储该数据集的最终结果供 Task B 使用
-            // 我们只需要取任意一个算法的排序结果（因为规则一致，结果相同）
             if (!reports.isEmpty()) {
                 List<Location> fullSortedList = reports.get(0).getSortedData();
                 List<String> top10Ids = new ArrayList<>();
@@ -58,7 +55,7 @@ public class TestSort {
                 inspectionResults.put(datasetName, top10Ids);
             }
 
-            // 5. 打印输出（用于实验报告截图）
+            // 5. 打印输出
             for (SortResult report : reports) {
                 List<Location> sortedList = report.getSortedData();
                 List<String> top10Ids = new ArrayList<>();
@@ -74,16 +71,9 @@ public class TestSort {
             }
             System.out.println("------------------------------------------------------------------------------------------------------------------");
         }
-
     }
 
-
-    /**
-     * 【新增】提供给同伴的静态访问方法
-     * @return 包含三个数据集 Top 10 地点的 Map
-     */
     public static Map<String, List<String>> getInspectionResults() {
         return inspectionResults;
     }
-
 }
