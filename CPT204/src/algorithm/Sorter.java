@@ -3,12 +3,12 @@ import model.Location;
 
 import java.util.List;
 /**
- * 定义排序算法的通用接口
+ * Defines the common interface for sorting algorithms.
  */
 public interface Sorter {
-    // 返回算法名称，方便在 Task A 报告中输出表格 [cite: 128]
+    // Return the algorithm name for easy table output in the Task A report.
     String name();
 
-    // 排序方法，接收原始列表，返回排序后的新列表
+    // Sorting method that takes the original list and returns a new sorted list.
     List<Location> sort(List<Location> data);
 }

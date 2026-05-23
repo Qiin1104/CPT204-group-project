@@ -13,7 +13,7 @@ public final class MergeSorter implements Sorter{
         List<Location> sorted = new ArrayList<>(data);
         if (sorted.size() < 2) return sorted;
 
-        // 预先创建一个缓冲区，优化内存开销
+        //Pre-create a buffer to reduce memory usage.
         List<Location> buffer = new ArrayList<>(sorted);
         mergeSort(sorted, buffer, 0, sorted.size());
         return sorted;

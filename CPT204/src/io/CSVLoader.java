@@ -21,7 +21,7 @@ public class CSVLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // 跳过空行或非数据行
+                //Skip empty lines or non-data lines.
                 if (line.trim().isEmpty() || line.contains("location_id")) {
                     continue;
                 }
@@ -33,15 +33,15 @@ public class CSVLoader {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            System.err.println("读取文件失败: " + filePath + "，错误原因: " + e.getMessage());
+            System.err.println("Failed to read file: " + filePath + ", Error reason: " + e.getMessage());
         }
         return locations;
     }
 
     /**
-     * 从 paths.csv 加载加权图
-     * @param filePath CSV文件路径
-     * @return 构建好的 WeightedGraph 对象
+     * Load the weighted graph from paths.csv.
+     * @param filePath The path to the CSV file.
+     * @return The constructed WeightedGraph object.
      */
     public static WeightedGraph loadWeightedGraph(String filePath) {
         WeightedGraph graph = new WeightedGraph();
@@ -53,10 +53,10 @@ public class CSVLoader {
             boolean isFirstLine = true;
 
             while ((line = br.readLine()) != null) {
-                // 跳过空行
+
                 if (line.trim().isEmpty()) continue;
 
-                // 跳过标题行（假设第一行是 from_location,to_location,weight）
+                // Skip the header row (assuming the first row is from_location,to_location,weight)
                 if (isFirstLine) {
                     isFirstLine = false;
                     continue;
@@ -91,13 +91,13 @@ public class CSVLoader {
     }
 
     /**
-     * 加载三个候选数据集的前10位置ID（从 Task A 结果）
-     * @return Map<数据集名称, List<位置ID>>
+     * Load the top 10 location IDs from the three candidate datasets (from Task A results).
+     * @return Map<dataset name, List<location ID>>
      */
     public static Map<String, List<String>> loadTop10Locations() {
         Map<String, List<String>> result = new HashMap<>();
 
-        // 根据 Task A 的结果填入
+        // Fill in based on Task A results.
         List<String> datasetA = Arrays.asList(
                 "L0001", "L0002", "L0003", "L0004", "L0005",
                 "L0006", "L0007", "L0008", "L0009", "L0010"

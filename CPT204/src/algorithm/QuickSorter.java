@@ -23,7 +23,7 @@ public final class QuickSorter implements Sorter {
         if (low >= high) return;
 
         int left = low, right = high;
-        // 选择中间元素作为 Pivot，提高在有序数据集上的稳定性
+        // Select the middle element as the pivot to improve stability on sorted datasets.
         Location pivot = data.get(low + (high - low) / 2);
 
         while (left <= right) {

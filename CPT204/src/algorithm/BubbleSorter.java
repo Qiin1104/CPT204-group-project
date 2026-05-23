@@ -12,14 +12,13 @@ public final class BubbleSorter implements Sorter{
 
     @Override
     public List<Location> sort(List<Location> data) {
-        // 复制一份数据，避免修改原始数据集，确保实验公平 [cite: 113]
+        // Make a copy of the data to avoid modifying the original dataset and ensure a fair experiment.
         List<Location> sorted = new ArrayList<>(data);
         int n = sorted.size();
 
         for (int i = 0; i < n - 1; i++) {
-            boolean swapped = false; // 优化：检查本轮是否有交换
+            boolean swapped = false; //Check if any swaps occurred in this round.
             for (int j = 0; j < n - 1 - i; j++) {
-                // 使用任务书规定的排序规则进行比较
                 if (Location.RANKING_COMPARATOR.compare(sorted.get(j), sorted.get(j + 1)) > 0) {
                     Location temp = sorted.get(j);
                     sorted.set(j, sorted.get(j + 1));
@@ -27,7 +26,7 @@ public final class BubbleSorter implements Sorter{
                     swapped = true;
                 }
             }
-            // 如果某一轮没有交换，说明已经有序，提前停止（这是性能分析的加分点）
+            //If no swaps occur in a round, it means the array is already sorted, so we can stop early
             if (!swapped) break;
         }
         return sorted;

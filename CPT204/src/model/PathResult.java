@@ -6,9 +6,9 @@ import java.util.List;
  * 路径结果类 - 存储 Dijkstra 的计算结果
  */
 public class PathResult {
-    private List<String> path;      // 路径节点列表（起点 → 终点）
-    private double totalDistance;   // 总距离
-    private boolean reachable;  // 标记是否可达,即路径是否存在（路径非空且有合法距离）
+    private List<String> path;      // List of nodes representing the path (Start → End)
+    private double totalDistance;   // Total distance of the path
+    private boolean reachable;  // Flag indicating if the path exists (true if path is non-empty and valid)
 
     public PathResult() {
         this.path = new ArrayList<>();
