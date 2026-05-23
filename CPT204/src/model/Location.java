@@ -20,11 +20,6 @@ public class Location {
         return priorityScore;
     }
 
-    /**
-     * Core optimization: the composite sorting rule specified in the task description.
-     * 1. Priority Score Descending
-     * 2. Location ID Ascending
-     */
     public static final Comparator<Location> RANKING_COMPARATOR = (l1, l2) -> {
         if (Double.compare(l2.getPriorityScore(), l1.getPriorityScore()) != 0) {
             return Double.compare(l2.getPriorityScore(), l1.getPriorityScore());

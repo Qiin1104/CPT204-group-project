@@ -10,27 +10,21 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import model.PathResult;
 
-
 public class PathVisualizer extends JFrame {
 
-    // 配色方案
-    private static final Color COLOR_BG = new Color(11, 15, 26);          // 核心夜空蓝背景
-    private static final Color COLOR_SIDEBAR = new Color(18, 24, 41);     // 控制侧边栏
-    private static final Color COLOR_CARD = new Color(26, 35, 58);        // 信息卡片
-    private static final Color COLOR_GRID = new Color(33, 44, 71, 80);    // 雷达网格线
-    private static final Color COLOR_TEXT_MAIN = new Color(240, 246, 252); // 主文字
-    private static final Color COLOR_TEXT_MUTED = new Color(139, 148, 158);// 弱文字
-
-    // 霓虹光效颜色
-    private static final Color NEON_START = new Color(0, 242, 165);       // 巡检引导色（荧光绿）
-    private static final Color NEON_END = new Color(255, 46, 99);         // 巡检异常色（珊瑚红）
-    private static final Color NEON_NORMAL = new Color(56, 139, 253);     // 普通途径光带（全息蓝）
-
-    // 节点颜色
-    private static final Color NODE_START_COLOR = new Color(255, 255, 255);      // 起点：全息纯白（破空高亮）
-    private static final Color NODE_WAYPOINT_COLOR = new Color(241, 196, 15);    // 中间必经点：全息琥珀黄（低调内敛）
-    private static final Color NODE_END_COLOR = new Color(255, 75, 75);         // 终点：脉冲绯红（收敛核心）
-    private static final Color NODE_DEFAULT_COLOR = new Color(56, 139, 253);     // 普通骨干节点：全息深蓝
+    private static final Color COLOR_BG = new Color(11, 15, 26);
+    private static final Color COLOR_SIDEBAR = new Color(18, 24, 41);
+    private static final Color COLOR_CARD = new Color(26, 35, 58);
+    private static final Color COLOR_GRID = new Color(33, 44, 71, 80);
+    private static final Color COLOR_TEXT_MAIN = new Color(240, 246, 252);
+    private static final Color COLOR_TEXT_MUTED = new Color(139, 148, 158);
+    private static final Color NEON_START = new Color(0, 242, 165);
+    private static final Color NEON_END = new Color(255, 46, 99);
+    private static final Color NEON_NORMAL = new Color(56, 139, 253);
+    private static final Color NODE_START_COLOR = new Color(255, 255, 255);
+    private static final Color NODE_WAYPOINT_COLOR = new Color(241, 196, 15);
+    private static final Color NODE_END_COLOR = new Color(255, 75, 75);
+    private static final Color NODE_DEFAULT_COLOR = new Color(56, 139, 253);
 
     private List<PathCase> pathCases;
     private int currentCaseIndex = 0;
@@ -70,23 +64,20 @@ public class PathVisualizer extends JFrame {
         getContentPane().setBackground(COLOR_BG);
         setLayout(new BorderLayout());
 
-        // 1. 左侧控制塔面板 (Sidebar)
         JPanel sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(340, 800));
         sidebar.setBackground(COLOR_SIDEBAR);
         sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, COLOR_GRID));
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 
-        // 顶栏标题
         JLabel lblTitle = new JLabel("Path Result");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lblTitle.setForeground(COLOR_TEXT_MAIN);
         lblTitle.setBorder(BorderFactory.createEmptyBorder(20, 20, 3, 20));
         sidebar.add(lblTitle);
 
-        // 交互操作引导
         JPanel guidePanel = new JPanel(new BorderLayout());
-        guidePanel.setBackground(new Color(56, 139, 253, 25)); // 科技蓝半透明微光
+        guidePanel.setBackground(new Color(56, 139, 253, 25));
         guidePanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(1, 0, 1, 0, new Color(56, 139, 253, 80)),
                 BorderFactory.createEmptyBorder(8, 20, 8, 20)
@@ -97,7 +88,6 @@ public class PathVisualizer extends JFrame {
         guidePanel.add(lblGuide, BorderLayout.CENTER);
         sidebar.add(guidePanel);
 
-        // Case 切换按钮组
         JPanel btnGroup = new JPanel(new GridLayout(4, 1, 0, 10));
         btnGroup.setBackground(COLOR_SIDEBAR);
         btnGroup.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -111,12 +101,10 @@ public class PathVisualizer extends JFrame {
             btn.setFocusPainted(false);
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-
             btn.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(56, 139, 253, 120), 1, true),
                     BorderFactory.createEmptyBorder(8, 12, 8, 12)
             ));
-
 
             btn.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
@@ -142,7 +130,6 @@ public class PathVisualizer extends JFrame {
         }
         sidebar.add(btnGroup);
 
-        // 数据监测看板卡片
         detailPanel = new JPanel();
         detailPanel.setBackground(COLOR_CARD);
         detailPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -181,7 +168,7 @@ public class PathVisualizer extends JFrame {
         gbc.gridy = 4; detailPanel.add(lblFlowTag, gbc);
 
         txtPathFlow = new JTextArea(4, 15);
-        txtPathFlow.setFont(new Font("Segoe UI", Font.PLAIN, 12)); // 💡 修复：更换为标准通用系统字体，彻底抹平 Unicode 箭头问号乱码
+        txtPathFlow.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         txtPathFlow.setForeground(COLOR_TEXT_MAIN);
         txtPathFlow.setBackground(COLOR_SIDEBAR);
         txtPathFlow.setLineWrap(true);
@@ -191,14 +178,12 @@ public class PathVisualizer extends JFrame {
 
         JScrollPane textScroll = new JScrollPane(txtPathFlow);
         textScroll.setBorder(BorderFactory.createLineBorder(COLOR_GRID));
-        textScroll.getViewport().setBackground(COLOR_SIDEBAR); // 💡 细节优化：统一滚动层背景色，移除刺眼白边
+        textScroll.getViewport().setBackground(COLOR_SIDEBAR);
         gbc.gridy = 5; gbc.weighty = 1.0; gbc.fill = GridBagConstraints.BOTH;
         detailPanel.add(textScroll, gbc);
 
         sidebar.add(detailPanel);
 
-
-        // 图例说明面板
         JPanel legendPanel = new JPanel(new GridLayout(4, 1, 0, 6));
         legendPanel.setOpaque(false);
         legendPanel.setBackground(COLOR_SIDEBAR);
@@ -209,7 +194,6 @@ public class PathVisualizer extends JFrame {
                 new Font("Segoe UI", Font.BOLD, 11), COLOR_TEXT_MUTED
         ));
 
-        // 图例项
         legendPanel.add(createLegendItem("Start Node", NODE_START_COLOR, "The starting node of the path"));
         legendPanel.add(createLegendItem("Mandatory Waypoint", NODE_WAYPOINT_COLOR, "Mandatory nodes to pass through"));
         legendPanel.add(createLegendItem("Destination", NODE_END_COLOR, "The target point of the current path"));
@@ -223,11 +207,9 @@ public class PathVisualizer extends JFrame {
         sidebar.add(legendWrapper);
         add(sidebar, BorderLayout.WEST);
 
-        // 2. 拓扑网格空间
         mapPanel = new MapPanel();
         add(mapPanel, BorderLayout.CENTER);
 
-        // 载入初始数据
         updateDashboard();
     }
 
@@ -241,7 +223,6 @@ public class PathVisualizer extends JFrame {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(dotColor);
                 g2.fillOval(x + 2, y + 2, 10, 10);
-                // 外圈发光微光圈
                 g2.setColor(new Color(dotColor.getRed(), dotColor.getGreen(), dotColor.getBlue(), 60));
                 g2.setStroke(new BasicStroke(2f));
                 g2.drawOval(x, y, 14, 14);
@@ -276,8 +257,6 @@ public class PathVisualizer extends JFrame {
             lblDistance.setText(String.format("%.1f m", rc.result.getTotalDistance()));
             lblNodeCount.setText(rc.result.getPath().size() + " Fixed Nodes");
             lblDistance.setForeground(NEON_START);
-
-            // 组装路径文本流程
             String pathStr = String.join(" -> ", rc.result.getPath());
             txtPathFlow.setText(pathStr);
         } else {
@@ -289,7 +268,6 @@ public class PathVisualizer extends JFrame {
         mapPanel.repaint();
     }
 
-    // 绘制路径
     private class MapPanel extends JPanel {
         public MapPanel() {
             setBackground(COLOR_BG);
@@ -305,7 +283,6 @@ public class PathVisualizer extends JFrame {
             int w = getWidth();
             int h = getHeight();
 
-            // 1. 绘制网格线
             g2.setColor(COLOR_GRID);
             g2.setStroke(new BasicStroke(1.0f));
             int gridSize = 50;
@@ -321,62 +298,47 @@ public class PathVisualizer extends JFrame {
 
             List<String> pathNodes = rc.result.getPath();
 
-            // 分析整个路径链，找出哪些物理路径是过去一次回来一次的
             Set<UnorderedPair<String>> bidiSegments = findBidirectionalSegments(pathNodes);
 
-            // 2. 计算并锁定所有路径节点的物理几何坐标
             Map<String, Point2D> nodePositions = new HashMap<>();
             for (int i = 0; i < pathNodes.size(); i++) {
                 String node = pathNodes.get(i);
                 nodePositions.put(node, calculateCoordinates(node, i, pathNodes.size(), w, h));
             }
 
-            // 3. 主路径发光光带绘制循环
             if (pathNodes.size() > 1) {
                 g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 for (int i = 0; i < pathNodes.size() - 1; i++) {
                     Point2D p1 = nodePositions.get(pathNodes.get(i));
                     Point2D p2 = nodePositions.get(pathNodes.get(i + 1));
 
-                    // 双层发光光带
-                    g2.setColor(new Color(56, 139, 253, 40)); // 外层扩散弱光
+                    g2.setColor(new Color(56, 139, 253, 40));
                     g2.setStroke(new BasicStroke(9.0f));
                     g2.draw(new Line2D.Double(p1, p2));
 
                     g2.setPaint(new GradientPaint(
                             (float)p1.getX(), (float)p1.getY(), NEON_NORMAL,
-                            (float)p2.getX(), (float)p2.getY(), NEON_START)); // 内层核心亮线
+                            (float)p2.getX(), (float)p2.getY(), NEON_START));
                     g2.setStroke(new BasicStroke(4.0f));
                     g2.draw(new Line2D.Double(p1, p2));
                 }
             }
 
-            // 4. 路径箭头绘制循环
             if (pathNodes.size() > 1) {
                 for (int i = 0; i < pathNodes.size() - 1; i++) {
                     Point2D p1 = nodePositions.get(pathNodes.get(i));
                     Point2D p2 = nodePositions.get(pathNodes.get(i + 1));
 
-                    // 默认单向路径，箭头尖端放置在50%位置
                     double tipPosFraction = 0.5;
 
-                    // 检查这条物理路径是否在整个轨迹中是双向通行的
                     if (bidiSegments.contains(new UnorderedPair<>(pathNodes.get(i), pathNodes.get(i + 1)))) {
-                        if (pathNodes.get(i).compareTo(pathNodes.get(i + 1)) < 0) {
-                            // 前进路线（如 L0106 -> L0105）：将箭头控制在 75% 的靠前位置
-                            tipPosFraction = 0.75;
-                        } else {
-                            // 折返路线（如 L0105 -> L0106）：将箭头控制在 75% 的靠后位置，完美实现分流不重叠
-                            tipPosFraction = 0.75;
-                        }
+                        tipPosFraction = 0.75;
                     }
 
-                    // 绘制优化尺寸和分段位置后的流向箭头
                     drawDynamicArrow(g2, p1, p2, tipPosFraction);
                 }
             }
 
-            // 5. 渲染节点
             int nodeRadius = 24;
             for (int i = 0; i < pathNodes.size(); i++) {
                 String node = pathNodes.get(i);
@@ -384,30 +346,24 @@ public class PathVisualizer extends JFrame {
                 int nx = (int) pt.getX();
                 int ny = (int) pt.getY();
 
-                // 节点色彩角色赋予
                 Color nodeColor = NODE_DEFAULT_COLOR;
-                if (node.equals(rc.start)) nodeColor = NODE_START_COLOR;               // 全息白起点
-                else if (node.equals(rc.destination)) nodeColor = NODE_END_COLOR;       // 脉冲红终点
-                else if (rc.waypoints.contains(node)) nodeColor = NODE_WAYPOINT_COLOR;  // 琥珀黄中间点
+                if (node.equals(rc.start)) nodeColor = NODE_START_COLOR;
+                else if (node.equals(rc.destination)) nodeColor = NODE_END_COLOR;
+                else if (rc.waypoints.contains(node)) nodeColor = NODE_WAYPOINT_COLOR;
 
-                // 阴影圈
                 g2.setPaint(new RadialGradientPaint(pt, nodeRadius * 1.5f, new float[]{0.0f, 1.0f}, new Color[]{new Color(0,0,0,180), new Color(0,0,0,0)}));
                 g2.fill(new Ellipse2D.Double(nx - nodeRadius * 1.3, ny - nodeRadius * 1.3, nodeRadius * 2.6, nodeRadius * 2.6));
 
-                // 实体内饰
                 g2.setColor(COLOR_CARD);
                 g2.fill(new Ellipse2D.Double(nx - nodeRadius, ny - nodeRadius, nodeRadius * 2, nodeRadius * 2));
 
-                // 霓虹呼吸外环
                 g2.setStroke(new BasicStroke(2.5f));
                 g2.setColor(nodeColor);
                 g2.draw(new Ellipse2D.Double(nx - nodeRadius, ny - nodeRadius, nodeRadius * 2, nodeRadius * 2));
 
-                // 核心光点
                 g2.setColor(nodeColor);
                 g2.fill(new Ellipse2D.Double(nx - 3, ny - 3, 6, 6));
 
-                // 质感标签和文字底衬
                 g2.setFont(new Font("Segoe UI", Font.BOLD, 12));
                 FontMetrics fm = g2.getFontMetrics();
                 int tx = nx - fm.stringWidth(node) / 2;
@@ -420,7 +376,6 @@ public class PathVisualizer extends JFrame {
                 g2.drawString(node, tx, ty);
             }
 
-            // 绘制场景水印文字
             g2.setFont(new Font("Segoe UI", Font.BOLD, 36));
             g2.setColor(new Color(255, 255, 255, 12));
             g2.drawString(rc.caseName.toUpperCase(), 30, h - 40);
@@ -468,7 +423,6 @@ public class PathVisualizer extends JFrame {
         }
     }
 
-    // 析轨迹链，识别哪些物理段被双向通行
     private Set<UnorderedPair<String>> findBidirectionalSegments(List<String> pathNodes) {
         Set<UnorderedPair<String>> bidirectionalSegments = new HashSet<>();
         Set<Pair<String>> traversedForward = new HashSet<>();
@@ -484,7 +438,6 @@ public class PathVisualizer extends JFrame {
         return bidirectionalSegments;
     }
 
-    // 有序点对，表示特定的单向遍历步骤 (A -> B != B -> A)
     class Pair<T> {
         public T p1; public T p2;
         public Pair(T p1, T p2) { this.p1 = p1; this.p2 = p2; }
@@ -497,7 +450,6 @@ public class PathVisualizer extends JFrame {
         @Override public int hashCode() { return p1.hashCode() ^ p2.hashCode(); }
     }
 
-    // 无序点对，表示一段中性的物理物理路径 (A-B == B-A)
     class UnorderedPair<T> {
         public T p1; public T p2;
         public UnorderedPair(T p1, T p2) { this.p1 = p1; this.p2 = p2; }
@@ -511,7 +463,6 @@ public class PathVisualizer extends JFrame {
         @Override public int hashCode() { return p1.hashCode() ^ p2.hashCode(); }
     }
 
-    // 本地测试的主函数入口
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             List<PathCase> mockList = new ArrayList<>();

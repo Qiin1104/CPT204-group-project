@@ -38,11 +38,6 @@ public class CSVLoader {
         return locations;
     }
 
-    /**
-     * Load the weighted graph from paths.csv.
-     * @param filePath The path to the CSV file.
-     * @return The constructed WeightedGraph object.
-     */
     public static WeightedGraph loadWeightedGraph(String filePath) {
         WeightedGraph graph = new WeightedGraph();
 
@@ -90,10 +85,6 @@ public class CSVLoader {
         return graph;
     }
 
-    /**
-     * Load the top 10 location IDs from the three candidate datasets (from Task A results).
-     * @return Map<dataset name, List<location ID>>
-     */
     public static Map<String, List<String>> loadTop10Locations() {
         Map<String, List<String>> result = new HashMap<>();
 

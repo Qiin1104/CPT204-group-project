@@ -57,7 +57,7 @@ public class main {
                 new MergeSorter()
         );
 
-        SortPerfomance benchmark = new SortPerfomance(sorters, 3);
+        SortPerfomance benchmark = new SortPerfomance(sorters, 1000, 20);
         Map<String, List<String>> inspectionResults = new LinkedHashMap<>();
 
         System.out.println("------------------------------------------------------------------------------------------------------------------");

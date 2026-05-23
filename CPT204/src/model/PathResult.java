@@ -2,9 +2,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 路径结果类 - 存储 Dijkstra 的计算结果
- */
 public class PathResult {
     private List<String> path;      // List of nodes representing the path (Start → End)
     private double totalDistance;   // Total distance of the path
@@ -22,7 +19,6 @@ public class PathResult {
         this.reachable = !path.isEmpty() && totalDistance < Double.POSITIVE_INFINITY;
     }
 
-    // 专门用于不可达的情况
     public static PathResult unreachable() {
         PathResult result = new PathResult();
         result.reachable = false;

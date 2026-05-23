@@ -1,14 +1,10 @@
 package model;
 
 
-/**
- * 加权边类 - 表示图中的一条边
- * 用于带权重的图（如路径距离）
- */
 public class WeightedEdge {
-    private String from;      // 起点
-    private String to;        // 终点
-    private double weight;    // 权重（距离）
+    private String from;
+    private String to;
+    private double weight;
 
     public WeightedEdge(String from, String to, double weight) {
         this.from = from;
