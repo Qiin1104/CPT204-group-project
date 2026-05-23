@@ -1,0 +1,143 @@
+@startuml
+skinparam backgroundcolor white
+skinparam candyStyle italic
+skinparam class {
+    BackgroundColor white
+    ArrowColor black
+    BorderColor black
+    FontName Consolas
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor transparent
+    BorderColor gray
+    FontName Consolas
+    FontStyle bold
+}
+
+package "main" {
+    class Main {
+        + {static} main(args: String[]): void
+        - {static} runTaskA(): Map<String, List<String>>
+        - {static} runTaskB(data: List<String>, data: List<String> datasetB, data: List<String> datasetC): void
+    }
+}
+
+package "algorithm" {
+    interface Sorter {
+        + name(): String
+        + sort(data: List<Location>): List<Location>
+    }
+
+    class BubbleSorter implements Sorter {
+        + name(): String
+        + sort(data: List<Location>): List<Location>
+    }
+
+    class MergeSorter implements Sorter {
+        + name(): String
+        + sort(data: List<Location>): List<Location>
+        - mergeSort(data: List<Location>, buffer: List<Location>, start: int, end: int): void
+        - merge(data: List<Location>, buffer: List<Location>, start: int, mid: int, end: int): void
+    }
+
+    class QuickSorter implements Sorter {
+        + name(): String
+        + sort(data: List<Location>): List<Location>
+        - quickSort(data: List<Location>, low: int, high: int): void
+    }
+
+    class SortPerformance {
+        - sorters: List<Sorter>
+        - repetitions: int
+        + run(data: List<Location>): List<SortResult>
+        - validateSorted(data: List<Location>, sorterName: String): void
+    }
+
+    class GraphEngine {
+        - graph: WeightedGraph
+        + shortestPath(start: String, end: String): PathResult
+        + shortestPathWithWaypoints(start: String, waypoints: List<String>, end: String): PathResult
+    }
+}
+
+package "model" {
+    class Location {
+        - locationId: String
+        - priorityScore: double
+        + {static} RANKING_COMPARATOR: Comparator<Location>
+    }
+
+    class SortResult {
+        - sorterName: String
+        - averageNanos: long
+        - sortedData: List<Location>
+    }
+
+    class WeightedEdge {
+        - from: String
+        - to: String
+        - weight: double
+    }
+
+    class WeightedGraph {
+        - adjacencyList: Map<String, List<WeightedEdge>>
+        - edgeCount: int
+        + addEdge(from: String, to: String, weight: double): void
+        + getNeighbors(vertex: String): List<WeightedEdge>
+        + containsVertex(vertex: String): boolean
+    }
+
+    class PathResult {
+        - path: List<String>
+        - totalDistance: double
+        - reachable: boolean
+        + {static} unreachable(): PathResult
+    }
+}
+
+package "io" {
+    class CSVLoader {
+        + {static} loadLocations(filePath: String): List<Location>
+        + {static} loadGraph(filePath: String): WeightedGraph
+        + {static} loadTop10Locations(): Map<String, List<String>>
+    }
+}
+
+package "visualization" {
+    class PathVisualizer {
+        - {static} COLOR_BG: Color
+        - {static} NEON_START: Color
+        + {static} main(args: String[]): void
+    }
+
+    class PathCase {
+        + caseName: String
+        + start: String
+        + end: String
+        + waypoints: List<String>
+        + result: PathResult
+    }
+}
+
+
+main ..> CSVLoader : "1. Loads Datasets"
+main ..> SortPerfomance : "2. Evaluates Sorters"
+main ..> GraphEngine : "3. Resolves Routing"
+main ..> PathVisualizer : "4. Spawns GUI"
+
+SortPerfomance "1" o--> "*" Sorter : "Maintains polymorphic list"
+SortPerfomance ..> SortResult : "Generates metrics"
+
+GraphEngine "1" *--> "1" WeightedGraph : "Encapsulates topology"
+GraphEngine ..> PathResult : "Computes paths"
+
+WeightedGraph "1" *--> "*" WeightedEdge : "Organizes via Adjacency List"
+
+CSVLoader ..> Location : "Instantiates records"
+CSVLoader ..> WeightedGraph : "Hydrates nodes and edges"
+
+PathVisualizer +-- PathCase : "Nested container"
+PathCase "1" o--> "1" PathResult : "Binds trajectory"
+
+@endum
